@@ -13,3 +13,11 @@
       {:root-path root-path :master-key master-key}
       nil)))
 
+(defn list-entries [kc]
+  (let [contents (load-data-file (:root-path kc) "contents.js")]
+    (mapv #(hash-map :uuid       (nth % 0)
+                     :entry-type (nth % 1)
+                     :title      (nth % 2)
+                     :url        (nth % 3)) contents))) 
+
+
