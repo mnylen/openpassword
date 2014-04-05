@@ -4,6 +4,7 @@ target/
 test/user.clj
 out/
 resources/public/*.js
+resources/public/*.css
 
 
 
