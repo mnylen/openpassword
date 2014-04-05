@@ -11,11 +11,16 @@ PROJECT_MOUNT="-v `pwd`:/opt/openpassword"
 
 LEIN_COMMAND="$@"
 REPL_PORT=34955
+SERVER_PORT=3000
 PORT_MAPPING=""
 
 if [[ "$LEIN_COMMAND" == repl* ]]; then
     LEIN_COMMAND="repl :start :host 0.0.0.0 :port $REPL_PORT"
     PORT_MAPPING="-p $REPL_PORT:$REPL_PORT"
+fi
+
+if [[ "$LEIN_COMMAND" == run* ]]; then
+    PORT_MAPPING="-p $SERVER_PORT:$SERVER_PORT" 
 fi
 
 DOCKER_OPTS="--rm -i -t $PORT_MAPPING $DEPS_MOUNT $PROJECT_MOUNT"
