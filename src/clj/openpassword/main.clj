@@ -9,14 +9,20 @@
             [clojure.pprint :refer [pprint]]
             [openpassword.keychain :as keychain]))
 
-(defn do-login [request-body session]
+(defn open-keychain [request-body session]
   (let [master-password (:password (json/parse-string request-body true))]
     (if-let [kc (keychain/open "resources/TestVault.agilekeychain" master-password)]
       {:status 200 :session (assoc session :keychain kc)}
       {:status 400 :session session})))
 
+(defn list-keychain-entries [session]
+  (if-let [kc (:keychain session)]
+    {:status 200, :body (json/generate-string {:data (keychain/list-entries kc)})}
+    {:status 401}))
+
 (defroutes app-routes
-  (POST "/login" {body :body session :session} (do-login (slurp body) session))
+  (GET "/keychain/entries" {session :session} (list-keychain-entries session))
+  (POST "/keychain/open" {body :body session :session} (open-keychain (slurp body) session))
   (route/resources "/")
   (route/not-found "Could not find resource"))
 
