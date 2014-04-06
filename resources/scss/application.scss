@@ -18,6 +18,11 @@ h1 {
     display:none;
 }
 
+@-webkit-keyframes horizontal-shake {
+    0%   { -webkit-transform: translate(5px, 0px); }
+    100% { -webkit-transform: translate(-5px, 0px); }
+}
+
 div#login-form {
     position:absolute;
     left:50%;
@@ -52,14 +57,27 @@ div#login-form {
             padding:5px;
         }
 
-        & > span {
-            &.failed-login {
-                margin:0 0 0 8px;
-                color:red;
-                font-weight:bold;
-                letter-spacing:1px;
-                font-size:0.9em;
-            }
+        & > span.error-message {
+            display:none;
+        }
+    }
+
+    &.invalid-password {
+        -webkit-animation-name: horizontal-shake;
+        -webkit-animation-duration: 0.1s;
+        -webkit-animation-iteration-count: 3;
+        -webkit-animation-timing-function: linear;
+
+        & > div > span.error-message {
+            color:rgb(196, 33, 33);
+            display:inline-block;
+            font-size:0.9em;
+
+            position:absolute;
+            right:20px;
+            margin-top:18px;
         }
     }
 }
+
+

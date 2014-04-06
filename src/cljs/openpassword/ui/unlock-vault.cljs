@@ -7,12 +7,12 @@
             [openpassword.ui.json :as json]))
 
 (hiccups/defhtml form-template []
-  [:div {:id "login-form"}
+  [:div {:id "login-form" :class "shake"}
    [:span "Unlock vault"]
    [:div
     [:input {:type "password" :autofocus true :placeholder "Master password"}]
     [:button "Unlock"]
-    [:span {:class "failed-login hidden"}
+    [:span {:class "error-message"}
      "Incorrect password."]]])
 
 (def keycode-enter 13)
@@ -33,15 +33,13 @@
   (find $form "input[type=password]"))
 
 (defn on-success [$form]
-  (.addClass (find $form "span.failed-login") "hidden")
   (.fadeOut $form 1500 #(.remove $form))
   (eventbus/trigger :vault-unlocked))
 
 (defn on-error [$form]
-  (let [$notification-text (find $form "span.failed-login")]
-    (.log js/console $notification-text)
-    (.removeClass $notification-text "hidden")
-    (.focus (password-input $form))))
+  (.removeClass $form "invalid-password")
+  (.setTimeout js/window #(.addClass $form "invalid-password") 0)
+  (.focus (password-input $form)))
 
 (defn try-login [$form]
   (let [password (val (password-input $form))] 
