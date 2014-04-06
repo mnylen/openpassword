@@ -20,8 +20,14 @@
     {:status 200, :body (json/generate-string {:data (keychain/list-entries kc)})}
     {:status 401}))
 
+(defn keychain-status [session]
+  (if (:keychain session)
+    {:status 200 :body (json/generate-string {:data {:open true}})}
+    {:status 200 :body (json/generate-string {:data {:open false}})}))
+
 (defroutes app-routes
   (GET "/keychain/entries" {session :session} (list-keychain-entries session))
+  (GET "/keychain/status" {session :session} (keychain-status session))
   (POST "/keychain/open" {body :body session :session} (open-keychain (slurp body) session))
   (route/resources "/")
   (route/not-found "Could not find resource"))
