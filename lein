@@ -6,7 +6,7 @@ if [ $(docker images |grep -q lein)$? -ne 0 ]; then
     docker build -t lein docker/lein
 fi
 
-DEPS_MOUNT="-v target/deps:/root/.m2/repository"
+DEPS_MOUNT="-v `pwd`/target/deps:/root/.m2/repository"
 PROJECT_MOUNT="-v `pwd`:/opt/openpassword"
 
 LEIN_COMMAND="$@"
