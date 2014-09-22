@@ -49,4 +49,4 @@
   (run true))
 
 (defn -main []
-  (run))
+  (run false))
